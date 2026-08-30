@@ -33,8 +33,8 @@ jobs:
         npx cap init "Bio Accoustic OS" "com.bao.app" --web-dir www
         npx cap add android
 
-        # FIX CRASH: Menyuntikkan App ID Uji Coba Google agar aplikasi tidak mental
-        perl -pi -e 's/<application/<application\n        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713"\/>/g' android/app/src/main/AndroidManifest.xml
+        # FIX CRASH: Injeksi App ID secara aman tepat sebelum tag penutup </application>
+        sed -i 's|</application>|    <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713"/>\n    </application>|' android/app/src/main/AndroidManifest.xml
 
     - name: Mulai Pembuatan APK (Build Gradle)
       run: |
