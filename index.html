@@ -1,8 +1,261 @@
-// ==========================================
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bio Accoustic OS</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            background-color: #111;
+            border-bottom: 2px solid #333;
+            position: relative;
+        }
+        .header img {
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            border-radius: 15px;
+        }
+        h1 {
+            margin: 10px 0 0 0;
+            font-size: 26px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+            padding-bottom: 100px;
+        }
+        .card {
+            background-color: #1a1a1a;
+            border: 2px solid #fff;
+            border-radius: 12px;
+            padding: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+        .card:active {
+            transform: scale(0.95);
+        }
+        .card.active {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        .freq-title {
+            font-size: 15px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+        .freq-hz {
+            font-size: 22px;
+            color: #888;
+        }
+        .card.active .freq-hz {
+            color: #222;
+        }
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+            box-sizing: border-box;
+            border-top: 2px solid #333;
+            z-index: 10;
+        }
+        .btn-about {
+            background-color: #222;
+            color: white;
+            border: 2px solid #fff;
+            padding: 12px 25px;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            letter-spacing: 1px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 100;
+            overflow-y: auto;
+        }
+        .modal-content {
+            background: #111;
+            margin: 10% auto;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            border: 3px solid #fff;
+            border-radius: 12px;
+            font-family: sans-serif;
+            line-height: 1.6;
+        }
+        .modal-content h2 {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            text-align: center;
+            margin-top: 0;
+            letter-spacing: 1px;
+            font-size: 24px;
+        }
+        .modal-content ul {
+            padding-left: 20px;
+            font-size: 14px;
+            color: #ccc;
+        }
+        .modal-content li {
+            margin-bottom: 10px;
+        }
+        .close-btn {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-weight: bold;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 18px;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="logo.svg" id="logoBao" alt="BAO">
+        <h1>BIO ACCOUSTIC OS</h1>
+    </div>
+
+    <div class="grid" id="freqGrid">
+        <!-- Kotak frekuensi akan dibuat otomatis oleh Script -->
+    </div>
+
+    <div class="bottom-bar">
+        <button class="btn-about" onclick="document.getElementById('aboutModal').style.display='block'">PANDUAN / TENTANG</button>
+    </div>
+
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <h2>PANDUAN PENGGUNAAN</h2>
+            <ul>
+                <li><b>Menenangkan Otak (432 Hz):</b> Volume 20-30%, 10-15 mnt, tutup mata di ruang tenang.</li>
+                <li><b>Wajah Awet Muda (528 Hz):</b> Arahkan ke wajah jarak 10-15 cm, 5 mnt sambil memijat.</li>
+                <li><b>Kantong Mata (285 Hz):</b> Posisikan dekat area bawah mata, rileks selama 3-5 mnt.</li>
+                <li><b>Tidur Nyenyak (222 Hz):</b> Letakkan di meja samping, volume sangat pelan 15 mnt sblm tidur.</li>
+                <li><b>Kurangi Migrain (144 Hz):</b> Dekat pelipis/leher (jarak 5 cm), pejam mata 10 mnt.</li>
+                <li><b>Dopamin Naik (396 Hz):</b> Dengarkan seperti musik santai, volume sedang 10-15 mnt pagi hari.</li>
+                <li><b>Aliran Darah Lancar (337 Hz):</b> Tempelkan bagian belakang HP langsung ke pergelangan/leher 5-10 mnt.</li>
+                <li><b>Anti-Nyeri/Sakit (174 Hz):</b> Tempelkan HP secara fisik ke area otot pinggang/sendi yang sakit 10 mnt.</li>
+                <li><b>Asam Lambung (111 Hz):</b> Berbaring telentang, letakkan HP tepat di atas ulu hati selama 10-15 mnt.</li>
+                <li><b>Regenerasi Sel (417 Hz):</b> Dekatkan speaker ke area tubuh yang terasa lelah selama 10 menit.</li>
+                <li><b>Detoksifikasi (741 Hz):</b> Dengarkan sambil merilekskan tubuh dan minum air putih selama 10 menit.</li>
+            </ul>
+            <button class="close-btn" onclick="document.getElementById('aboutModal').style.display='none'">TUTUP</button>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // DATA FREKUENSI
+        // ==========================================
+        const frequencies = [
+            { name: "MENENANGKAN OTAK", hz: 432 },
+            { name: "AWET MUDA & KERUTAN", hz: 528 },
+            { name: "KANTONG MATA", hz: 285 },
+            { name: "TIDUR NYENYAK", hz: 222 },
+            { name: "MENGURANGI MIGRAIN", hz: 144 },
+            { name: "DOPAMIN NAIK", hz: 396 },
+            { name: "ALIRAN DARAH LANCAR", hz: 337 },
+            { name: "ANTI-NYERI", hz: 174 },
+            { name: "ASAM LAMBUNG", hz: 111 },
+            { name: "REGENERASI SEL", hz: 417 },
+            { name: "DETOKSIFIKASI", hz: 741 }
+        ];
+
+        const grid = document.getElementById('freqGrid');
+        let activeCard = null;
+        let audioCtx = null;
+        let oscillator = null;
+
+        // Membuat tombol grid
+        frequencies.forEach((item) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = '<div class="freq-title">' + item.name + '</div><div class="freq-hz">' + item.hz + ' HZ</div>';
+            card.onclick = () => toggleFrequency(card, item.hz);
+            grid.appendChild(card);
+        });
+
+        function toggleFrequency(card, hz) {
+            if (activeCard === card) {
+                stopAudio();
+                card.classList.remove('active');
+                activeCard = null;
+            } else {
+                if (activeCard) activeCard.classList.remove('active');
+                card.classList.add('active');
+                activeCard = card;
+                playAudio(hz);
+            }
+        }
+
+        function playAudio(hz) {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            stopAudio();
+            oscillator = audioCtx.createOscillator();
+            oscillator.type = 'sine'; 
+            oscillator.frequency.setValueAtTime(hz, audioCtx.currentTime);
+            
+            const gainNode = audioCtx.createGain();
+            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.1);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+        }
+
+        function stopAudio() {
+            if (oscillator) {
+                oscillator.stop();
+                oscillator.disconnect();
+                oscillator = null;
+            }
+        }
+
+        // ==========================================
         // 1. SISTEM AUTO-UPDATE
         // ==========================================
         const APP_VERSION_CODE = 1; 
-        const VERSION_URL = "https://USERNAME_GITHUB_ANDA.github.io/NAMA_REPO_ANDA/version.json"; // PASTIKAN URL INI BENAR
+        const VERSION_URL = "https://nodamembandel-prog.github.io/BAO/version.json"; 
 
         async function checkForUpdates() {
             try {
@@ -16,7 +269,7 @@
                     }
                 }
             } catch (e) {
-                console.log("Gagal mengecek pembaruan: ", e);
+                console.log("Gagal mengecek pembaruan.");
             }
         }
         setTimeout(checkForUpdates, 3000);
@@ -24,7 +277,7 @@
         // ==========================================
         // 2. PANEL ADMIN TERSEMBUNYI & KEAMANAN PIN
         // ==========================================
-        const PIN_ADMIN = "123456"; // GANTI ANGKA INI DENGAN PIN RAHASIA ANDA
+        const PIN_ADMIN = "123456"; // GANTI PIN INI JIKA PERLU
 
         let logoClicks = 0;
         let clickTimer;
@@ -60,10 +313,8 @@
         // 3. INISIALISASI IKLAN (LOKAL & GLOBAL SERVER)
         // ==========================================
         async function initAds() {
-            // 1. Cek iklan lokal (Prioritas untuk HP Anda sendiri)
             let finalAdUnitId = localStorage.getItem("admob_ad_unit_id");
 
-            // 2. Jika lokal kosong (Konsumen Play Store), ambil ID resmi dari Github secara diam-diam
             if (!finalAdUnitId) {
                 try {
                     let response = await fetch(VERSION_URL + "?t=" + new Date().getTime());
@@ -76,21 +327,25 @@
                 }
             }
 
-            // Batalkan jika ID iklan tidak ada sama sekali
             if (!finalAdUnitId) return; 
 
             try {
-                const { AdMob } = window.Capacitor.Plugins;
-                await AdMob.initialize({ requestTrackingAuthorization: true });
-                await AdMob.showBanner({
-                    adId: finalAdUnitId,
-                    adSize: 'BANNER',
-                    position: 'BOTTOM_CENTER',
-                    margin: 0,
-                    isTesting: true // Ubah menjadi false sebelum publikasi final ke Play Store
-                });
+                if (window.Capacitor && window.Capacitor.Plugins) {
+                    const { AdMob } = window.Capacitor.Plugins;
+                    await AdMob.initialize({ requestTrackingAuthorization: true });
+                    await AdMob.showBanner({
+                        adId: finalAdUnitId,
+                        adSize: 'BANNER',
+                        position: 'BOTTOM_CENTER',
+                        margin: 0,
+                        isTesting: true // Ubah false jika sudah rilis di PlayStore
+                    });
+                }
             } catch (e) {
-                console.log('Sistem iklan hanya berjalan di dalam APK Android.');
+                console.log('Iklan hanya berjalan di dalam APK.');
             }
         }
         setTimeout(initAds, 2000);
+    </script>
+</body>
+</html>
