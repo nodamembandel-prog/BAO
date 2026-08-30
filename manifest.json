@@ -1,0 +1,16 @@
+{
+  "name": "Bio Accoustic OS",
+  "short_name": "BAO",
+  "description": "Sistem Operasi Kalibrasi Molekuler Berbasis Frekuensi Audio",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050914",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

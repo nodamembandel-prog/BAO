@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bio Accoustic OS</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="logo.svg">
+    <style>
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-red: #ff003c;
+            --bg-dark: #050914;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Impact', 'Arial Black', sans-serif; /* Changed font here */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+        h1 {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+            text-align: center;
+            font-size: 1.5rem; /* Slightly larger for bolder font */
+            letter-spacing: 2px;
+            margin: 0;
+            text-transform: uppercase; /* Ensure it looks firm */
+        }
+        .visualizer {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 2px solid var(--neon-cyan);
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2) inset;
+            position: relative;
+        }
+        .wave {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,243,255,0.4) 0%, rgba(0,0,0,0) 70%);
+            transform: scale(0.1);
+            transition: transform 0.1s;
+        }
+        .hz-display {
+            position: absolute;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 5px var(--neon-cyan);
+        }
+        .controls {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .mode-selector {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        button {
+            background: transparent;
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            flex: 1;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+        button.active {
+            background: var(--neon-cyan);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            background: #1a2a40;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: var(--neon-cyan);
+            margin-top: -8px;
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+        .emit-btn {
+            background: transparent;
+            color: var(--neon-red);
+            border: 2px solid var(--neon-red);
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--neon-red);
+            box-shadow: 0 0 10px rgba(255, 0, 60, 0.3) inset;
+            text-transform: uppercase;
+        }
+        .emit-btn.emitting {
+            background: var(--neon-red);
+            color: white;
+            box-shadow: 0 0 20px var(--neon-red);
+        }
+        .about-btn {
+            margin-top: 15px;
+            border-color: #666;
+            color: #aaa;
+            padding: 8px;
+            font-family: 'Arial', sans-serif; /* Keep reading text readable */
+            font-weight: normal;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #0a1122;
+            border: 1px solid var(--neon-cyan);
+            padding: 20px;
+            width: 85%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            position: relative;
+            font-family: 'Arial', sans-serif; /* Readable font for modal */
+        }
+        .modal-content h2 {
+            color: var(--neon-cyan);
+            margin-top: 0;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            font-family: 'Impact', 'Arial Black', sans-serif; /* Title in modal */
+            letter-spacing: 1px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: var(--neon-red);
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem;
+            font-family: 'Impact', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="logo.svg" alt="BAO Logo" class="logo-img">
+        <h1>BIO ACCOUSTIC OS</h1>
+    </div>
+
+    <div class="visualizer">
+        <div class="wave" id="wave"></div>
+        <div class="hz-display" id="hzDisplay">432 Hz</div>
+    </div>
+
+    <div class="controls">
+        <div class="mode-selector">
+            <button class="active" onclick="setMode('regen', 432)" id="btn-regen">Bio-Regen</button>
+            <button onclick="setMode('repel', 5000)" id="btn-repel">Hydro-Repel</button>
+            <button onclick="setMode('purify', 12000)" id="btn-purify">Purify</button>
+        </div>
+
+        <div>
+            <label style="font-family: 'Arial', sans-serif; font-size: 0.8rem; color: #ccc;">Frekuensi Parametrik</label>
+            <input type="range" id="freqSlider" min="20" max="20000" value="432" oninput="updateFreq(this.value)">
+        </div>
+
+        <button class="emit-btn" id="emitBtn" onclick="toggleEmit()">ACTIVATE EMITTER</button>
+        <button class="about-btn" onclick="toggleModal(true)">ℹ️ Tentang Aplikasi (About)</button>
+    </div>
+
+    <!-- Modal About -->
+    <div class="modal" id="aboutModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="toggleModal(false)">X</span>
+            <h2>TENTANG BIO ACCOUSTIC OS</h2>
+            <p><strong>BAO (Bio Accoustic OS)</strong> adalah sistem operasi kalibrasi molekuler masa depan. Aplikasi ini memancarkan frekuensi audio sub-atomik yang direkayasa untuk memanipulasi materi.</p>
+            <ul>
+                <li><strong style="color:var(--neon-cyan)">Bio-Regen (432 Hz):</strong> Memancarkan getaran mikro untuk merangsang aliran darah dan memulihkan kelelahan otot/seluler tubuh manusia.</li>
+                <li><strong style="color:var(--neon-cyan)">Hydro-Repel (5000 Hz):</strong> Mendorong molekul H2O ke udara, berfungsi mengeringkan area atau objek yang basah dalam hitungan detik.</li>
+                <li><strong style="color:var(--neon-cyan)">Purify (12000 Hz):</strong> Menghancurkan dinding sel patogen, menyaring polutan mikroskopis pada air minum.</li>
+            </ul>
+            <p style="color: #666; font-size: 0.8rem; margin-top: 15px;">*Prototipe simulasi interaktif Web Audio & Haptic API.</p>
+        </div>
+    </div>
+
+    <script>
+        let audioCtx, oscillator, gainNode;
+        let isEmitting = false;
+        let currentFreq = 432;
+        let animFrame;
+
+        const wave = document.getElementById('wave');
+        const hzDisplay = document.getElementById('hzDisplay');
+        const emitBtn = document.getElementById('emitBtn');
+        const slider = document.getElementById('freqSlider');
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                gainNode = audioCtx.createGain();
+                gainNode.gain.value = 0.1; 
+                gainNode.connect(audioCtx.destination);
+            }
+        }
+
+        function setMode(mode, defaultFreq) {
+            document.querySelectorAll('.mode-selector button').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + mode).classList.add('active');
+            slider.value = defaultFreq;
+            updateFreq(defaultFreq);
+        }
+
+        function updateFreq(val) {
+            currentFreq = val;
+            hzDisplay.innerText = val + " Hz";
+            if (oscillator && isEmitting) {
+                oscillator.frequency.setTargetAtTime(val, audioCtx.currentTime, 0.1);
+            }
+        }
+
+        function toggleEmit() {
+            initAudio();
+            if (isEmitting) {
+                stopEmit();
+            } else {
+                startEmit();
+            }
+        }
+
+        function startEmit() {
+            isEmitting = true;
+            emitBtn.innerText = "EMITTING...";
+            emitBtn.classList.add('emitting');
+            
+            oscillator = audioCtx.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(currentFreq, audioCtx.currentTime);
+            oscillator.connect(gainNode);
+            oscillator.start();
+
+            animateWave();
+            
+            if (navigator.vibrate) {
+                navigator.vibrate([10000]); 
+            }
+        }
+
+        function stopEmit() {
+            isEmitting = false;
+            emitBtn.innerText = "ACTIVATE EMITTER";
+            emitBtn.classList.remove('emitting');
+            
+            if (oscillator) {
+                oscillator.stop();
+                oscillator.disconnect();
+            }
+            cancelAnimationFrame(animFrame);
+            wave.style.transform = `scale(0.1)`;
+            
+            if (navigator.vibrate) navigator.vibrate(0);
+        }
+
+        function animateWave() {
+            if (!isEmitting) return;
+            const scale = 0.5 + (Math.random() * 0.5); 
+            wave.style.transform = `scale(${scale})`;
+            animFrame = requestAnimationFrame(animateWave);
+        }
+
+        function toggleModal(show) {
+            document.getElementById('aboutModal').style.display = show ? 'flex' : 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+    <!-- Dark Background -->
+    <rect width="512" height="512" fill="#050914" rx="100" />
+    
+    <!-- Outer White Circle (Thicker) -->
+    <circle cx="256" cy="256" r="210" fill="none" stroke="#ffffff" stroke-width="20" />
+    
+    <!-- BAO Text (Bolder font) -->
+    <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#ffffff" font-family="'Impact', 'Arial Black', sans-serif" font-size="180" font-weight="900" letter-spacing="2">BAO</text>
+    
+    <!-- Decorative frequency wave below text (Pure White) -->
+    <path d="M 156 380 Q 206 340 256 380 T 356 380" fill="none" stroke="#ffffff" stroke-width="12" />
+</svg>
