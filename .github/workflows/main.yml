@@ -1,38 +1,45 @@
-name: Deploy Bio Accoustic OS to GitHub Pages
+name: Auto Build APK Android
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build-apk:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Ambil Kode (Checkout)
         uses: actions/checkout@v4
-      
-      - name: Setup GitHub Pages
-        uses: actions/configure-pages@v4
-      
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+
+      - name: Siapkan Node.js
+        uses: actions/setup-node@v4
         with:
-          path: '.'
-      
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-      
+          node-version: '20'
+
+      - name: Siapkan Java (JDK 17 untuk Android)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Siapkan Mesin Pembungkus (Capacitor)
+        run: |
+          mkdir www
+          cp index.html logo.svg manifest.json www/ 2>/dev/null || :
+          npm init -y
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npx cap init "Bio Accoustic OS" "com.bao.app" --web-dir www
+          npx cap add android
+
+      - name: Mulai Pembuatan APK (Build Gradle)
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Simpan APK ke GitHub Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: BAO-App-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
