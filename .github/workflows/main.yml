@@ -9,37 +9,38 @@ jobs:
   build-apk:
     runs-on: ubuntu-latest
     steps:
-      - name: Ambil Kode (Checkout)
-        uses: actions/checkout@v4
+    - name: Ambil Kode (Checkout)
+      uses: actions/checkout@v4
 
-      - name: Siapkan Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+    - name: Siapkan Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
 
-      - name: Siapkan Java (JDK 21 untuk Android)
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
+    - name: Siapkan Java (JDK 21 untuk Android)
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
 
-      - name: Siapkan Mesin Pembungkus (Capacitor)
-        run: |
-          mkdir www
-          cp index.html logo.svg manifest.json www/ 2>/dev/null || :
-          npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "Bio Accoustic OS" "com.bao.app" --web-dir www
-          npx cap add android
+    - name: Siapkan Mesin Pembungkus (Capacitor)
+      run: |
+        mkdir www
+        cp index.html logo.svg manifest.json version.json www/ 2>/dev/null || :
+        npm init -y
+        npm install @capacitor/core @capacitor/cli @capacitor/android
+        npm install @capacitor-community/admob
+        npx cap init "Bio Accoustic OS" "com.bao.app" --web-dir www
+        npx cap add android
 
-      - name: Mulai Pembuatan APK (Build Gradle)
-        run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug
+    - name: Mulai Pembuatan APK (Build Gradle)
+      run: |
+        cd android
+        chmod +x gradlew
+        ./gradlew assembleDebug
 
-      - name: Simpan APK ke GitHub Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: BAO-App-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+    - name: Simpan APK ke GitHub Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: BAO-App-APK
+        path: android/app/build/outputs/apk/debug/app-debug.apk
